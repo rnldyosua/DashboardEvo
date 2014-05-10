@@ -5,6 +5,7 @@
         <title><?php echo $this->config->item("titlepage"); ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="<?php echo base_url(); ?>assets/themes/bootswatch/flatly.bootstrap.min.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>assets/datatables/DT_bootstrap.css" rel="stylesheet">
         <style>
 			body {
 				padding-top:71px;
@@ -18,6 +19,7 @@
 				padding:10px 20px;
 			}
 		</style>
+          
 	</head>
 	<body>
         <div class="navbar navbar-default navbar-fixed-top">
@@ -33,8 +35,8 @@
                 <div class="navbar-collapse collapse" id="navbar-main">
                     <?php if($this->session->userdata('session_admin')) { $session_admin = $this->session->userdata('session_admin'); ?>
                     <ul class="nav navbar-nav ">
-                        <li><a href="<?php echo site_url('dashboard'); ?>">Dashboard</a></li>
-                        <li class="active"><a href="<?php echo site_url('survey/all'); ?>">Survey</a></li>                        
+                        <li <?php echo $this->router->class=="dashboard"? "class=\"active\"":"";?>><a href="<?php echo site_url('dashboard'); ?>">Dashboard</a></li>
+                        <li <?php echo $this->router->class=="survey"? "class=\"active\"":"";?>><a href="<?php echo site_url('survey/all'); ?>">Survey</a></li>                        
                     </ul>
                     
                     <ul class="nav navbar-nav navbar-right">
@@ -62,5 +64,19 @@
         </div>
         <script src="<?php echo base_url(); ?>assets/themes/jquery/jquery-2.0.3.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/themes/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/datatables/jquery.dataTables.js"></script>
+        <script src="<?php echo base_url(); ?>assets/datatables/DT_bootstrap.js"></script>
+        <script>
+            $(function(){
+               $('.datatable').dataTable({
+                "sDom": "<'pull-right'l>t<'row'<'col-lg-6'f><'col-lg-6'p>>",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "Show _MENU_ entries"
+                }
+            }); 
+            });
+            
+        </script>
   	</body>
 </html>

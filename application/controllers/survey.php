@@ -38,52 +38,13 @@ class Survey extends CI_Controller {
     }
         
     
-    /*
-     * Desc: display question based on survey id
-     */
-	public function admin($id){
-               //check login
-               haslogin();
-               
-               $session_admin = $this->session->userdata('session_admin');
-			
-                $content['success'] = '';
-                $content['error'] = '';
-                
-                //query questions
-                $fields = "admin_id,admin_fullname,survey_id,survey_title,survey_status,survey_added,".
-                           "(SELECT COUNT(*) FROM question WHERE question_status=\"1\" ".
-                           "AND question_surveyid=survey_id) as question";
-                
-                //setting query table
-                $table = array();
-		$table[0] = new stdClass();
-		$table[0]->table = 'admin';
-		$table[1] = new stdClass();
-		$table[1]->table = 'survey';
-		$table[1]->joinOn = 'admin_id = survey_adminid';
-		$table[1]->joinType = '';
-		
-		
-                $getData = $this->query_model->getDataJoin($fields,$table,"survey","survey_status='1' AND survey_adminid=".intval($id),'survey_added DESC');
-                echo "<pre>";
-                print_r($getData);
-                echo "</pre>";
-                die();
-		$content['data'] = $getData;
-			
-                $admin = $this->query_model->getData('admin_id,admin_fullname','admin',"admin_id='$admin_id'");
-                $content['admin'] = $admin;
-			
-                $template['content'] = $this->load->view('survey/list_view', $content, TRUE);		
-		$this->load->view('template', $template);		
-	}
+    
         
         /*
          * Desc: add new survey title
          * 
          */
-        public function addsurvey(){
+        public function add(){
             //cek login
             haslogin();
                         

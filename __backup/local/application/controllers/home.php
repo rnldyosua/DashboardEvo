@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Home extends CI_Controller {
+        
 	public function index()
 	{
 		if(!$this->session->userdata('session_admin')) {
@@ -23,8 +24,9 @@ class Home extends CI_Controller {
 						$session_admin->fullname = $getDataAdmin[0]->admin_fullname;
 						$session_admin->roles = $getDataAdmin[0]->admin_roles;
 						$this->session->set_userdata('session_admin',$session_admin);
-						redirect('survey/all');  	
-					}
+						redirect('survey');  	
+                                                die();
+					}                                        
 				}
 			}
 			if(validation_errors() != '') {
@@ -32,23 +34,23 @@ class Home extends CI_Controller {
 			}
 			
 			$template['content'] = $this->load->view('admin/login_view', $content, TRUE);
-			$template['title'] = 'Survey - PT. Merah Cipta Media | Login Area';
+			
 			$this->load->view('template', $template);
 		} else {
-			redirect('survey/all');	
+			redirect('survey');	
 		}
 	}
 	public function logout()
 	{
 		if($this->session->userdata('session_admin')) {
 			$this->session->unset_userdata('session_admin');
+                        $this->session->set_flashdata("success","Thank you.<br/>You have logged out!");
 			redirect('home');
+                        die();
 		} else {
 			redirect('home');	
 		}
 	}
         
-        function init(){
-            
-        }
+        
 }

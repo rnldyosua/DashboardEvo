@@ -1,9 +1,18 @@
 <?php
-	if($error!='') {
+	//form validation
+        if($error!='') {
 		echo '<div class="alert alert-dismissable alert-danger">'.$error.'</div>';
-	}
-        echo "yourname ".$this->config->item("yourname");
+	}        
+        
+        if($this->session->flashdata("error")){
 ?>
+<div class="alert alert-dismissable alert-danger"><?php echo $this->session->flashdata("error");?></div>
+<?php } 
+      if($this->session->flashdata("success")){  
+?>
+<div class="alert alert-dismissable alert-success"><?php echo $this->session->flashdata("success");?></div>
+<?php }?>
+
 <form method="post">
     <fieldset>
     	<legend><h2>Login Area</h2></legend>

@@ -1,86 +1,66 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Question extends CI_Controller {
-	public function survey($survey_id='',$page=1)
-	{
-		if($this->session->userdata('session_admin')) {
-			if($survey_id=='') {
-				$this->session->set_flashdata('error','Survey not found.');
-				redirect('survey/all');
-			}
-			
-			$session_admin = $this->session->userdata('session_admin');
-			
-			$content['success'] = '';
-			$content['error'] = '';
-			if($this->session->flashdata('success')) {
-				$content['success'] = $this->session->flashdata('success');
-			}
-			if($this->session->flashdata('error')) {
-				$content['error'] = '<li>'.$this->session->flashdata('error').'</li>';
-			}
-			
-			$limit = 10;
-			$offset = ($page-1)*$limit;
-			
-			$getDataTotal = $this->query_model->getData('count(*) as total','question',"question_status='1' AND question_surveyid='$survey_id'");
-			$config['base_url'] = site_url('question/survey/'.$survey_id);
-			$config['total_rows'] = $getDataTotal[0]->total;
-			$config['per_page'] = $limit;
-			$config['uri_segment'] = 4;
-			$config['num_links'] = 5;
-			$config['use_page_numbers'] = TRUE;
-			$config['full_tag_open'] = '<ul class="pagination" style="display:table; margin:auto;">';
-			$config['full_tag_close'] = '</ul>';
-			$config['first_link'] = 'First';
-			$config['first_tag_open'] = '<li>';
-			$config['first_tag_close'] = '</li>';
-			$config['last_link'] = 'Last';
-			$config['last_tag_open'] = '<li>';
-			$config['last_tag_close'] = '</li>';
-			$config['next_link'] = '&gt;';
-			$config['next_tag_open'] = '<li>';
-			$config['next_tag_close'] = '</li>';
-			$config['prev_link'] = '&lt;';
-			$config['prev_tag_open'] = '<li>';
-			$config['prev_tag_close'] = '</li>';
-			$config['num_tag_open'] = '<li>';
-			$config['num_tag_close'] = '</li>';
-			$config['cur_tag_open'] = '<li><a href="#"><b>';
-			$config['cur_tag_close'] = '</b></a></li>';
-			
-			$this->pagination->initialize($config);
-			$content['pagination'] = $this->pagination->create_links();
-			
-			$getData = $this->query_model->getData('question_id,question_type,question_title,question_option,question_mandatory','question',"question_status='1' AND question_surveyid='$survey_id'",$limit,$offset,'question_id');
-			$content['offset'] = $offset;
-			$content['data'] = $getData;
-			
-			$table = array();
-			$table[0] = new stdClass();
-			$table[0]->table = 'admin';
-			$table[1] = new stdClass();
-			$table[1]->table = 'survey';
-			$table[1]->joinOn = 'admin_id = survey_adminid';
-			$table[1]->joinType = '';
-			$table[2] = new stdClass();
-			$table[2]->table = 'brand';
-			$table[2]->joinOn = 'survey_brandid = brand_id';
-			$table[2]->joinType = '';
-			$table[3] = new stdClass();
-			$table[3]->table = 'company';
-			$table[3]->joinOn = 'company_id = brand_companyid';
-			$table[3]->joinType = '';
-			$survey = $this->query_model->getDataJoin('admin_id,admin_fullname,brand_id,brand_name,company_id,company_name,survey_id,survey_title,survey_code,survey_added',$table,"survey_id='$survey_id'");
-			$content['survey'] = $survey;
-			
-			$template['content'] = $this->load->view('question/list_view', $content, TRUE);
-			$template['title'] = 'Survey - PT. Merah Cipta Media | Question';
-			$this->load->view('template', $template);
-		} else {
-			redirect('home');	
-		}
+    
+        /*
+         * Desc: redirect to survey! it is not allowed
+         */
+        public function index(){
+            haslogin();
+            redirect("survey","refresh");
+        }
+        
+        /*
+         * Desc: display all the question based on survey id
+         */
+	public function survey($id){
+                //check login
+                haslogin();
+                
+                #variabel
+                $session_admin = $this->session->userdata('session_admin');
+                $content['success'] = '';
+                $content['error'] = '';
+                
+                #query
+                 //1. get information [Survey Title, DATE and CREATOR]
+                 $fields = "admin_id,admin_fullname,survey_title, survey_added";
+                 $table = array();
+                 $table[0] = new stdClass();
+		 $table[0]->table = 'admin';
+		 $table[1] = new stdClass();
+		 $table[1]->table = 'survey';
+		 $table[1]->joinOn = 'admin_id = survey_adminid';
+		 $table[1]->joinType = '';
+                 
+                 $where = "admin.admin_id = survey.survey_adminid AND ".
+                          "survey.survey_id = ".intval($id);
+                 
+                 $survey = $this->query_model->getDataJoin($fields,$table,$where);
+                  
+                 //2. get question
+                 $fields = "question_id,question_surveyid,order_number,".
+                           "question_type,question_title,question_option,".
+                           "question_mandatory,question_status,question_added";
+                 $where = "question_surveyid = ".intval($id);
+                 $sort = "order_number";
+                 $limit = $offset = 0;
+                 
+                 $questions = $this->query_model->getData($fields,"question",$where,$limit,$offset,$sort);
+                 
+                 #view
+                 $content["survey"] = $survey;
+                 $content["questions"] = $questions;
+                 $content["id"] = $id;
+                 
+                 $template['content'] = $this->load->view('question/index', $content, TRUE);		
+		 $this->load->view('template', $template);
+                
 	}
+        
+        
+        
+        
 	public function add($survey_id='')
 	{
 		if($this->session->userdata('session_admin')) {

@@ -1,0 +1,17 @@
+
+[9 Mei]
+1. login [OK]
+2. List Survey [OK]
+3. CrUD survey [OK]
+
+[10 Mei]
+4. List Question
+5. CrUD Question
+
+
+SELECT admin_fullname,survey_title, survey_added FROM admin JOIN survey ON 
+admin.admin_id = survey.survey_adminid AND survey.survey_id = 8
+
+
+SELECT question_id,question_surveyid,order_number,question_type,question_title,question_option,
+question_mandatory,question_status,question_added 
