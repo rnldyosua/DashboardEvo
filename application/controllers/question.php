@@ -204,68 +204,7 @@ class Question extends CI_Controller {
              $content["idq"] = $question_id;
 	     $template['content'] = $this->load->view('question/edit', $content, TRUE);	
              $this->load->view('template', $template);
-                
-            /*
-		if($this->session->userdata('session_admin')) {
-			if($survey_id=='') {
-				$this->session->set_flashdata('error','Survey not found.');
-				redirect('survey/all');
-			}
-			if($question_id=='') {
-				$this->session->set_flashdata('error','Question not found.');
-				redirect('question/survey/'.$survey_id);
-			}
-			$getData = $this->query_model->getData('survey_adminid','survey',"survey_id='".$survey_id."'");
-			
-			$session_admin = $this->session->userdata('session_admin');
-			if($session_admin->id!=$getData[0]->survey_adminid) {
-				$this->session->set_flashdata('error','Access denied.');
-				redirect('survey/all');
-			}
-			$content['error'] = '';
-			
-			$getData = $this->query_model->getData('question_id,question_title,question_type,question_option,question_mandatory','question',"question_id='".$question_id."'");
-			
-			$this->form_validation->set_rules('question_title', 'Title', 'required');
-			$this->form_validation->set_error_delimiters('<li>', '</li>');
-			if($this->form_validation->run() == TRUE) {
-				$data = array(
-					'question_type' => $this->input->post('question_type'),
-					'question_title' => $this->input->post('question_title'),
-					'question_option' => $this->input->post('question_option'),
-					'question_mandatory' => $this->input->post('question_mandatory')
-				);
-				$this->query_model->updateData('question',$data,"question_id='".$question_id."'");
-				
-				$surveyData = $this->query_model->getData('survey_title','survey',"survey_id='".$survey_id."'");
-				
-				$data = array(
-					'activity_adminid' => $session_admin->id,
-					'activity_desc' => '<a href="[detailAdminURL]/'.$session_admin->id.'">'.$session_admin->fullname.'</a> edit question in Survey <a href="[detailSurveyURL/'.$survey_id.']">'.$surveyData[0]->survey_title.'</a>',
-					'activity_type' => 'question'
-				);
-				$this->query_model->insertData('activity',$data);
-				
-				$this->session->set_flashdata('success','Edit Question Success.');
-				redirect('question/survey/'.$survey_id);
-			}
-			if(validation_errors() != '') {
-				$content['error'] = validation_errors();
-				$getData[0]->question_type = $this->input->post('question_type');
-				$getData[0]->question_title = $this->input->post('question_title');
-				$getData[0]->question_option = $this->input->post('question_option');
-				$getData[0]->question_mandatory = $this->input->post('question_mandatory');
-			}
-			
-			$content['data'] = $getData;
-			$template['content'] = $this->load->view('question/edit_view', $content, TRUE);
-			$template['title'] = 'Survey - PT. Merah Cipta Media | Edit Question';
-			$this->load->view('template', $template);
-		} else {
-			redirect('home');	
-		}
-                 *
-                 */
+                            
 	}
 	
         /*
