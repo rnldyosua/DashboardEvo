@@ -44,7 +44,7 @@ class Survey extends CI_Controller {
          * Desc: add new survey title
          * 
          */
-        public function addsurvey(){
+        public function add(){
             //cek login
             haslogin();
                         
@@ -167,26 +167,37 @@ class Survey extends CI_Controller {
         
         
 		
-	public function preview($survey_id='')
-	{
-		if($this->session->userdata('session_admin')) {
-			if($survey_id=='') {
-				$this->session->set_flashdata('error','Survey not found.');
-				redirect('survey/all');
-			}	
-			$survey = $this->query_model->getData('survey_title','survey',"survey_id='".$survey_id."' AND survey_status='1'");
-			if(count($survey)==0) {
-				$this->session->set_flashdata('error','Survey not found.');
-				redirect('survey/all');
-			}
-			$question = $this->query_model->getData('question_id,question_type,question_title,question_option,question_mandatory','question',"question_surveyid='".$survey_id."' AND question_status='1'");
-			$template['error'] = '';
-			$template['survey'] = $survey;
-			$template['question'] = $question;
-			$template['title'] = 'Survey - PT. Merah Cipta Media';
-			$this->load->view('survey/invitationPage_view', $template);
-		} else {
-			redirect('home');	
-		}
+	public function preview($survey_id=''){
+            
+            //check login
+            haslogin();
+            
+            #validasi
+            //check exist survey id
+            $getData = $this->query_model->getData('survey_adminid','survey',"survey_id='".$survey_id."'");
+            if($survey_id == "" || count($getData) == 0){
+                $this->session->set_flashdata('error','Survey not found.');
+                redirect("survey","refresh");
+                die();
+            }
+            
+            #query
+                 //1. get information [Survey Title]
+                 $survey = $this->query_model->getData('survey_title','survey',"survey_id='".$survey_id."' AND survey_status='1'");
+                                  
+                 //is survey exist
+                 if(count($survey) == 0 || $survey_id == ""){
+                     $this->session->set_flashdata('error','Survey not found.');
+                     redirect("survey","refresh");
+                     die();
+                 }
+                 
+                 $question = $this->query_model->getData('question_id,question_type,question_title,question_option,question_mandatory','question',"question_surveyid='".$survey_id."' AND question_status='1'");
+		 $template['error'] = '';
+		 $template['survey'] = $survey;
+		 $template['question'] = $question;
+		
+		 $this->load->view('survey/preview', $template);
+            		
 	}
 }

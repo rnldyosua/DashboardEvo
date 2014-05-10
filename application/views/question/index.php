@@ -46,6 +46,8 @@
         <div class="info-right">: <?php echo $survey[0]->admin_fullname; ?> </div>
     </div>
 </div>
+
+<?php echo anchor("survey","Back",array("class"=>"btn btn-primary btn-success pull-right","style"=>"margin-left:10px;"));?>
 <a href="<?php echo site_url('question/add/'.$id); ?>" class="btn btn-primary pull-right" style="margin-bottom:10px;">ADD</a>
 <table class="table table-striped table-bordered datatable">
     <thead>
@@ -65,12 +67,13 @@
 		$no = 1;	
                 
                 foreach($questions as $key => $value) {
+                    //echo $value->show_to_web;
 		?>
-        <tr>
+        <tr <?php echo $value->show_to_web== "1"? "class=\"danger\"":"";?>>
             <td><?php echo $no; ?></td>
             <td><?php echo $value->order_number;?></td>
-            <td><?php echo $value->question_type !=""? $value->question_type: "checkbox"; ?></td>
-            <td><?php echo $value->question_title; ?></td>
+            <td ><?php echo $value->question_type !=""? $value->question_type: "checkbox";?></td>
+            <td><?php echo $value->question_title;?></td>                 
             <td><?php echo nl2br($value->question_option); ?></td>
             <td>
                 <?php 
@@ -95,7 +98,17 @@
             	<a href="<?php echo site_url('question/edit/'.$id.'/'.$value->question_id); ?>">Edit</a>&nbsp;&nbsp;&nbsp;
                 <?php 
                       echo anchor("question/remove/".$id."/".$value->question_id,"Delete",
-                                  array("onClick"=>"return confirm('Are you sure?');"));?>
+                                  array("onClick"=>"return confirm('Are you sure?');"));
+                ?>&nbsp;&nbsp;&nbsp;
+                <?php
+                     if($value->show_to_web == "0"){
+                         echo anchor("question/showtoweb/".$id."/".$value->question_id."/".
+                              $value->show_to_web,"Show to Web",
+                              array("onClick"=>"return confirm('Are you sure?');"));
+                     }else{
+                         echo "";
+                     }
+                ?>
                 
             	<?php } ?>
             </td>

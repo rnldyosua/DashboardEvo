@@ -2,30 +2,15 @@
 	if($error!='') {
 		echo '<div class="alert alert-dismissable alert-danger">'.$error.'</div>';
 	}
-	if($this->session->flashdata("success")) {
-		echo "<div class=\"alert alert-dismissable alert-success\">".
-                     $this->session->flashdata("success")."</div>";
+        
+        if($this->session->flashdata("error")) {
+		echo '<div class="alert alert-dismissable alert-danger">'.
+                        $this->session->flashdata("error").'</div>';
 	}
-        /*
-	$session_admin = $this->session->userdata('session_admin');
-	$ext = '';
-	if(!isset($brand[0]->brand_id)) {
-		$brand[0] = new stdClass();
-		$brand[0]->brand_id = '';
-	} else {
-		$ext = '/'.$brand[0]->brand_id;
-	}
-	if(!isset($admin[0]->admin_id)) {
-		$admin[0] = new stdClass();
-		$admin[0]->admin_id = '';	
-	} else {
-		$ext = '/'.$admin[0]->admin_id;
-	}
-         * 
-         */
+        	
 ?>
 <div class="page-header"><h1>Survey </h1></div>
-<?php echo anchor("survey/addsurvey","ADD",array("class"=>"btn btn-primary pull-right",
+<?php echo anchor("survey/add","ADD",array("class"=>"btn btn-primary pull-right",
                   "style"=>"margin-bottom:10px;"));?>
 
 <table class="table table-striped table-bordered datatable">
@@ -57,16 +42,16 @@
                   $status = $value->survey_status == "1"? "Yes": "No";
                   echo anchor("survey/setpublish/".$value->survey_id."/".
                               $value->survey_status,$status,
-                              array("onClick"=>"return confirm('Are you sure?');"));
+                              array("onClick"=>"return confirm('Are you sure?\\n\\All question will (un)publish');"));
                   ?>
             </td>
         	<td>
-            	<a href="#">Preview</a>				
+            	<?php echo anchor("survey/preview/".$value->survey_id,"Preview");?>
             	&nbsp;&nbsp;&nbsp;
                 <?php echo anchor("survey/edit/".$value->survey_id,"Edit");?>
                 &nbsp;&nbsp;&nbsp;
                 <?php echo anchor("survey/remove/".$value->survey_id,"Remove",
-                                       array("onClick"=>"return confirm('Are you sure?');"));?>
+                                       array("onClick"=>"return confirm('Are you sure?\\n\\All questions will be deleted.');"));?>
             	
             </td>
         </tr>

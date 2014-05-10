@@ -57,7 +57,8 @@ class Question extends CI_Controller {
                  //2. get question
                  $fields = "question_id,question_surveyid,order_number,".
                            "question_type,question_title,question_option,".
-                           "question_mandatory,question_status,question_added";
+                           "question_mandatory,question_status,question_added,".
+                           "show_to_web";
                  $where = "question_surveyid = ".intval($id);
                  $sort = "order_number";
                  $limit = $offset = 0;
@@ -255,6 +256,26 @@ class Question extends CI_Controller {
             $data = array("question_mandatory"=>$new_status);
             $this->query_model->updateData("question",$data,"question_id = ".intval($idq));
             $this->session->set_flashdata('success','Mandatory status has been updated!');
+            redirect("question/survey/".$ids,"refresh");
+            die();
+            
+        }
+        
+        /*
+         * Desc: toggle show to the web
+         * params: id survey,id question,status
+         * return: void
+         */
+        function showtoweb($ids,$idq,$status){
+            
+            haslogin();            
+            $new_status = $status == "1"? "0" : "1";                        
+            
+            $data1 = array("show_to_web"=>"0");
+            $data2 = array("show_to_web"=>$new_status);
+            $this->query_model->updateData("question",$data1,"question_surveyid = ".intval($ids));
+            $this->query_model->updateData("question",$data2,"question_id = ".intval($idq));
+            $this->session->set_flashdata('success','Show to Web has been updated!');
             redirect("question/survey/".$ids,"refresh");
             die();
             

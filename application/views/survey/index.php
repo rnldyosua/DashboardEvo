@@ -46,7 +46,7 @@
                   ?>
             </td>
         	<td>
-            	<a href="#">Preview</a>				
+            	<?php echo anchor("survey/preview/".$value->survey_id,"Preview");?>
             	&nbsp;&nbsp;&nbsp;
                 <?php echo anchor("survey/edit/".$value->survey_id,"Edit");?>
                 &nbsp;&nbsp;&nbsp;

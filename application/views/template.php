@@ -36,7 +36,8 @@
                     <?php if($this->session->userdata('session_admin')) { $session_admin = $this->session->userdata('session_admin'); ?>
                     <ul class="nav navbar-nav ">
                         <li <?php echo $this->router->class=="dashboard"? "class=\"active\"":"";?>><a href="<?php echo site_url('dashboard'); ?>">Dashboard</a></li>
-                        <li <?php echo $this->router->class=="survey"? "class=\"active\"":"";?>><a href="<?php echo site_url('survey'); ?>">Survey</a></li>                        
+                        <li <?php 
+                                 echo in_array($this->router->class, array("survey","question"))? "class=\"active\"":"";?>><a href="<?php echo site_url('survey'); ?>">Survey</a></li>                        
                     </ul>
                     
                     <ul class="nav navbar-nav navbar-right">
@@ -44,7 +45,7 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $session_admin->fullname; ?> <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo site_url('admin/profile'); ?>">Profile</a></li>
-                                <li><a href="<?php echo site_url('survey/admin/'.$session_admin->id); ?>">My Survey</a></li>
+                                <!--li><a href="<?php //echo site_url('survey/admin/'.$session_admin->id); ?>">My Survey</a></li -->
                                 <li class="divider"></li>
                                 <li><a href="<?php echo site_url('home/logout'); ?>">Logout</a></li>
                             </ul>
