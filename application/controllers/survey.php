@@ -157,8 +157,10 @@ class Survey extends CI_Controller {
             haslogin();            
             $new_status = $status == "1"? "0" : "1";
             
-            $data = array("survey_status"=>$new_status);
-            $this->query_model->updateData("survey",$data,"survey_id = ".intval($id));
+            $data1 = array("survey_status"=>"0");
+            $data2 = array("survey_status"=>$new_status);
+            $this->query_model->updateData("survey",$data1,"survey_id = ".intval($id));
+            $this->query_model->updateData("survey",$data2,"survey_id = ".intval($id));
             $this->session->set_flashdata('success','Publish status has been updated!');
             redirect("survey","refresh");
             die();
